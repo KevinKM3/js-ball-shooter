@@ -4,6 +4,7 @@ const ctx = canvas.getContext("2d");
 let points = 0;
 let enemies = [];
 let bullets = [];
+
 let mouse = {
   x: canvas.width / 2,
   y: canvas.height / 2,
@@ -55,7 +56,7 @@ function Shoot() {
   let vy = mouse.y - bullet.y;
   let speed = 6;
 
-  let dist = Math.sqrt(vx * vy + vy + vy);
+  let dist = Math.sqrt(vx * vx + vy + vy);
   bullet.dx = vx / dist;
   bullet.dy = vy / dist;
 
@@ -97,11 +98,11 @@ function Update() {
 
     if (
       bullet.x < 0 ||
-      bullet.y > canvas.width ||
+      bullet.x > canvas.width ||
       bullet.y < 0 ||
       bullet.y > canvas.height
     ) {
-      bullets.splice(1, 1);
+      bullets.splice(i, 1);
       console.log(bullets);
     }
 
@@ -123,8 +124,22 @@ function Update() {
     if (enemy.x < 0) {
       enemies.splice(i, 1);
       points = 0;
+      originalTimer = 150;
     }
 
+    for (let j = 0; j < bullets.length; j++) {
+      let bullet = bullets[j];
+      let ax = bullet.x - enemy.x;
+      let ay = bullet.y - enemy.y;
+      let distance = Math.sqrt(ax * ax + ay * ay);
+
+      if (distance < bullet.radius + enemy.radius) {
+        enemies.splice(i, 1);
+        bullets.splice(j, 1);
+        points += 100;
+        console.log(points);
+      }
+    }
     enemy.update();
   }
 
