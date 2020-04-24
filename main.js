@@ -14,6 +14,13 @@ addEventListener("mousemove", (event) => {
   mouse.y = event.clientY;
 });
 
+addEventListener("click", Shoot);
+addEventListener("keypress", (event) => {
+  if (event.code == "Space") {
+    Shoot();
+  }
+});
+
 class Circle {
   constructor(x, y, r, c) {
     this.x = x;
@@ -34,6 +41,26 @@ class Circle {
     this.draw();
   }
 }
+
+function Shoot() {
+  let bullet = new Circle(player.x, player.y, 15, "white");
+  // bullet.mx = mouse.x;
+  // bullet.my = mouse.y;
+
+  let vx = mouse.x - bullet.x;
+  let vy = mouse.y - bullet.y;
+  let speed = 6;
+
+  let dist = Math.sqrt(vx * vy + vy + vy);
+  bullet.dx = vx / dist;
+  bullet.dy = vy / dist;
+
+  bullet.dx *= speed;
+  bullet.dy *= speed;
+
+  bullets.push(bullet);
+}
+
 let player;
 function Start() {
   player = new Circle(0, canvas.height / 2, 30, "#FFCE00");
