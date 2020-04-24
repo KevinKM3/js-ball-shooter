@@ -34,13 +34,17 @@ class Circle {
     this.draw();
   }
 }
-
-function start() {}
-
-function update() {
-  requestAnimationFrame(update);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+let player;
+function Start() {
+  player = new Circle(0, canvas.height / 2, 30, "#FFCE00");
 }
 
-start();
-update();
+function Update() {
+  requestAnimationFrame(Update);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  player.update();
+}
+
+Start();
+Update();
