@@ -137,13 +137,17 @@ function Update() {
         enemies.splice(i, 1);
         bullets.splice(j, 1);
         points += 100;
-        console.log(points);
       }
     }
     enemy.update();
   }
 
   player.update();
+
+  ctx.fillStyle = "#FFF";
+  ctx.font = "28px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("Points: " + points, canvas.width / 2, 50);
 }
 
 Start();
