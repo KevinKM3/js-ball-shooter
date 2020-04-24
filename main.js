@@ -42,6 +42,10 @@ class Circle {
   }
 }
 
+function randomIntFromRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 function Shoot() {
   let bullet = new Circle(player.x, player.y, 15, "white");
   // bullet.mx = mouse.x;
@@ -61,14 +65,68 @@ function Shoot() {
   bullets.push(bullet);
 }
 
+// Spawn Enemy
+function SpawnEnemy() {
+  let enemy = new Circle(
+    canvas.width,
+    randomIntFromRange(20, canvas.height - 20),
+    20,
+    "red"
+  );
+
+  enemy.speed = randomIntFromRange(3, 5);
+  enemies.push(enemy);
+}
+
 let player;
 function Start() {
   player = new Circle(0, canvas.height / 2, 30, "#FFCE00");
 }
 
+let originalTimer = 150;
+let spawnTimer = originalTimer;
 function Update() {
   requestAnimationFrame(Update);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Bullets
+  for (let i = 0; i < bullets.length; i++) {
+    let bullet = bullets[i];
+
+    bullet.x += bullet.dx;
+    bullet.y += bullet.dy;
+
+    if (
+      bullet.x < 0 ||
+      bullet.y > canvas.width ||
+      bullet.y < 0 ||
+      bullet.y > canvas.height
+    ) {
+      bullets.splice(1, 1);
+      console.log(bullets);
+    }
+
+    bullet.update();
+  }
+
+  // Enemies
+  spawnTimer--;
+  if (spawnTimer <= 0) {
+    originalTimer = originalTimer * 0.98 > 60 ? originalTimer * 0.98 : 60;
+    spawnTimer = originalTimer;
+    SpawnEnemy();
+  }
+  for (let i = 0; i < enemies.length; i++) {
+    let enemy = enemies[i];
+
+    enemy.x -= enemy.speed;
+
+    if (enemy.x < 0) {
+      enemies.splice(i, 1);
+      points = 0;
+    }
+
+    enemy.update();
+  }
 
   player.update();
 }
